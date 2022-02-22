@@ -8,9 +8,10 @@ export default function AppProvider(props: { children: boolean | react.ReactChil
     const [userBalance, setUserBalance] = useState<any>('0')
     const [userSolanaAccount, setUserSolanaAccount] = useState<any>()
     const [playTogether, setPlayTogether] = useState<any>()
+    const [errorhandler, setErrorHandler] = useState<any>();
 
     return (
-        <AppContext.Provider value={{ userAddress, setUserAddress, userBalance, setUserBalance, userSolanaAccount, setUserSolanaAccount, playTogether, setPlayTogether }}>
+        <AppContext.Provider value={{ userAddress, setUserAddress, userBalance, setUserBalance, userSolanaAccount, setUserSolanaAccount, playTogether, setPlayTogether, errorhandler, setErrorHandler }}>
             {props.children}
         </AppContext.Provider>
     )

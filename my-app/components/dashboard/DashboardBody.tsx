@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { Alert, AlertTitle } from "@mui/material";
 import { FC, useContext, useEffect, useState } from "react"
-import { Cookies, useCookies } from 'react-cookie'
+import { useCookies } from 'react-cookie'
 import { ConnectMetamask, GetBalance, SendBaseEndpoint } from "../../utils/Wallet";
 import { AppContext } from "../context/AppContext";
 

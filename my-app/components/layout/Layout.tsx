@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import Navbar from "./navbar/Navbar";
 import Footer from './footer/Footer';
-import Script from 'next/Script'
+// import Script from 'next/Script'
+import Script from '../../node_modules/next/script'
 
 function Layout(props: any) {
     return (
