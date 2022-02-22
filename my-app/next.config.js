@@ -2,7 +2,8 @@
 const nextConfig = {
     reactStrictMode: true,
 };
-const withHtml = require('next-html');
+// const withHtml = require('next-html');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
@@ -13,6 +14,8 @@ module.exports = {
         });
 
         config.optimization = {
+            minimize: true,
+            minimizer: [new TerserPlugin()],
             splitChunks: {
                 cacheGroups: {
                     styles: {

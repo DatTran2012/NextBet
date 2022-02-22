@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { CookiesProvider } from 'react-cookie'
-import AppProvider from './components/context/AppContext';
-import Layout from './components/layout/Layout';
+import AppProvider from './context/AppContext';
+import Layout from './layout/Layout';
 
 export const Provider: FC = (props) => {
 

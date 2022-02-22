@@ -8,9 +8,9 @@ import '../public/assets/css/plugin/slick.css'
 import '../public/assets/css/arafat-font.css'
 import '../public/assets/css/plugin/animate.css'
 import '../public/assets/css/style.css'
-import "./components/dashboard/dashboard.css"
+import "../components/dashboard/dashboard.css"
 import type { AppProps } from 'next/app';
-import { Provider } from './Provider';
+import { Provider } from '../components/Provider';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
