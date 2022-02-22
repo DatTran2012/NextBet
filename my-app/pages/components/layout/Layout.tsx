@@ -2,7 +2,6 @@
 /* eslint-disable @next/next/no-sync-scripts */
 import Head from 'next/head'
 import Navbar from "./navbar/Navbar";
-
 import Footer from './footer/Footer';
 
 function Layout(props: any) {
@@ -41,7 +40,8 @@ function Layout(props: any) {
             <script src="assets/js/plugin/jquery.nice-select.min.js"></script>
             <script src="assets/js/plugin/jquery.downCount.js"></script>
             <script src="assets/js/plugin/counter.js"></script>
-            <script src="assets/js/plugin/waypoint.min.js"></script>
+            {/* <script src="assets/js/plugin/waypoint.min.js"></script> */}
+            <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
             <script src="assets/js/plugin/jquery.magnific-popup.min.js"></script>
             <script src="assets/js/plugin/wow.min.js"></script>
             <script src="assets/js/plugin/plugin.js"></script>

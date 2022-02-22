@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-sync-scripts */
 /* eslint-disable @next/next/no-css-tags */
 import type { NextPage } from 'next'
-import { BetPopModal } from './components/shared/BetPopModal';
-import { DashboardBody, DashboardNav } from './components/dashboard/DashBoardComponents';
+import { BetPopModal } from '../components/shared/BetPopModal';
+import { DashboardNav } from '../components/dashboard/DashboardNav';
+import { DashboardBody } from '../components/dashboard/DashboardBody';
 
 const Dashboard: NextPage = () => {
     return (

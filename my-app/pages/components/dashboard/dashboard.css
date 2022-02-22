@@ -1,0 +1,25 @@
+#hashid {
+    font-size: 14px;
+    overflow-wrap: 'break-word';
+    word-break: break-all;
+}
+#addresssol {
+    overflow-wrap: 'anywhere';
+}
+.odd {
+    background: blue;
+}
+.even {
+    background: red;
+}
+.zero {
+    background: black;
+}
+.onebet {
+    background: green;
+}
+@media (max-width: 375px) {
+    .mysol {
+        width: 100% !important;
+    }
+}

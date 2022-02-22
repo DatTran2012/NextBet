@@ -104,14 +104,14 @@ export default function Navbar() {
                                             <a className="nav-link" href="contact.html">Contact</a>
                                         </li> */}
                                     </ul>
-                                    <div className="right-area header-action d-flex align-items-center max-un">
+                                    {/* <div className="right-area header-action d-flex align-items-center max-un">
                                         <button type="button" className="login" data-bs-toggle="modal" data-bs-target="#loginMod">
                                             Login
                                         </button>
                                         <button type="button" className="cmn-btn reg" data-bs-toggle="modal" data-bs-target="#loginMod">
                                             Sign Up
                                         </button>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </nav>
                         </div>

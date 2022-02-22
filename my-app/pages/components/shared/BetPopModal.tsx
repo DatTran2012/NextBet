@@ -22,7 +22,7 @@ export const BetPopModal: FC = () => {
                                         <div className="select-odds d-flex align-items-center">
                                             <h6>Select Odds</h6>
                                             <div className="d-flex in-dec-val">
-                                                <input type="text" value="1.5" className="InDeVal2" />
+                                                <input type="text" defaultValue="1.5" className="InDeVal2" />
                                                 <div className="btn-area">
                                                     <button className="plus2">
                                                         <img src="assets/images/icon/up-arrow.png" alt="icon" />
@@ -44,7 +44,7 @@ export const BetPopModal: FC = () => {
                                                     </select>
                                                 </div>
                                                 <div className="d-flex in-dec-val">
-                                                    <input type="text" value="0.1" className="InDeVal1" />
+                                                    <input type="text" defaultValue="0.1" className="InDeVal1" />
                                                     <div className="btn-area">
                                                         <button className="plus">
                                                             <img src="assets/images/icon/up-arrow.png" alt="icon" />

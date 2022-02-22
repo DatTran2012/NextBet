@@ -1,16 +1,14 @@
 import { ethers } from 'ethers';
 import Web3 from 'web3';
 import { chainList } from './ChainId';
-import { parseEther } from 'ethers/lib/utils';
-import { useState } from 'react';
-
-const isMetaMaskInstalled = () => {
-    //Have to check the ethereum binding on the window object to see if it's installed
-    const { ethereum } = window as any;
-    return Boolean(ethereum && ethereum.isMetaMask);
-};
 
 export const ConnectMetamask = async () => {
+    const isMetaMaskInstalled = () => {
+        //Have to check the ethereum binding on the window object to see if it's installed
+        const { ethereum } = window as any;
+        return Boolean(ethereum && ethereum.isMetaMask);
+    };
+
     try {
         if (!isMetaMaskInstalled()) {
             throw new Error("No MetaMask found");
@@ -75,7 +73,7 @@ export const SendETH = async (endpoint: string, chainid: string, toAddress: stri
 // const ContractAddr = '0xB8c77482e45F1F44dE1745F52C74426C631bDD52'; /* BNB Contract address */
 // const ContractABI = [{ "constant": false, "inputs": [{ "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transfer", "outputs": [], "payable": false, "type": "function" }]
 
-//send type of money base on endpoint currently connecting to
+//send type of money base on endpoint currently connecting to then make post api txhash/address/amount
 export const SendBaseEndpoint = async (from: string, to: string, amount: string) => {
     try {
         const params = [{
@@ -83,6 +81,7 @@ export const SendBaseEndpoint = async (from: string, to: string, amount: string)
             to: to,
             value: ethers.utils.parseUnits(amount, 9).toHexString(),
         }];
+        await ConnectMetamask()
         const { ethereum } = window as any;
         const provider = new ethers.providers.Web3Provider(ethereum);
 
