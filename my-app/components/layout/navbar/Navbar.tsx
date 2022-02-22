@@ -27,12 +27,17 @@ export default function Navbar() {
                                     <ul className="navbar-nav mr-auto mb-2 mb-lg-0">
                                         <li className="nav-item">
                                             <Link href="/" passHref>
-                                                <a className="nav-link active" aria-current="page">Home</a>
+                                                <a className="nav-link" aria-current="page">Home</a>
                                             </Link>
                                         </li>
                                         <li className="nav-item">
                                             <Link href="/dashboard" passHref>
                                                 <a className="nav-link" aria-current="page">Dashboard</a>
+                                            </Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link href="/transaction" passHref>
+                                                <a className="nav-link" aria-current="page">Transaction</a>
                                             </Link>
                                         </li>
                                         {/* <li className="nav-item dropdown main-navbar">

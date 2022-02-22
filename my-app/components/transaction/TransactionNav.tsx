@@ -1,6 +1,6 @@
 import { FC } from "react"
 
-export const DashboardNav: FC = () => {
+export const TransactionNav: FC = () => {
     return (
         <div className="dashboard-heading">
             <div className="container">
@@ -8,15 +8,14 @@ export const DashboardNav: FC = () => {
                     <div className="col-xl-3 col-lg-3">
                         <ul className="nav" role="tablist">
                             <li className="nav-item" role="presentation">
-                                <button className="nav-link active" id="dashboard-tab" data-bs-toggle="tab"
-                                    data-bs-target="#dashboard" type="button" role="tab" aria-controls="dashboard"
-                                    aria-selected="true">dashboard</button>
+                                <button className="nav-link" id="deposit-tab" data-bs-toggle="tab"
+                                    data-bs-target="#deposit" type="button" role="tab" aria-controls="deposit"
+                                    aria-selected="true">deposit</button>
                             </li>
                             <li className="nav-item" role="presentation">
-                                <button className="nav-link" id="my-bets-tab" data-bs-toggle="tab"
-                                    data-bs-target="#my-bets" type="button" role="tab" aria-controls="my-bets"
-                                    aria-selected="false">my bets</button>
-
+                                <button className="nav-link" id="withdraw-tab" data-bs-toggle="tab"
+                                    data-bs-target="#withdraw" type="button" role="tab" aria-controls="withdraw"
+                                    aria-selected="false">withdraw</button>
                             </li>
                         </ul>
                     </div>
