@@ -2,7 +2,6 @@ import Head from 'next/head'
 import Navbar from "./navbar/Navbar";
 import Footer from './footer/Footer';
 import Script from 'next/Script'
-import Link from 'next/link';
 
 function Layout(props: any) {
     return (
@@ -13,16 +12,6 @@ function Layout(props: any) {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
                 <title>Bitbetio - HTML Template</title>
-
-                {/* <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-                <link rel="stylesheet" href="assets/css/fontawesome.min.css" />
-                <link rel="stylesheet" href="assets/css/jquery-ui.css" />
-                <link rel="stylesheet" href="assets/css/plugin/nice-select.css" />
-                <link rel="stylesheet" href="assets/css/plugin/magnific-popup.css" />
-                <link rel="stylesheet" href="assets/css/plugin/slick.css" />
-                <link rel="stylesheet" href="assets/css/arafat-font.css" />
-                <link rel="stylesheet" href="assets/css/plugin/animate.css" />
-                <link rel="stylesheet" href="assets/css/style.css" /> */}
             </Head>
 
             <Navbar />
@@ -33,7 +22,9 @@ function Layout(props: any) {
 
             <Script src="assets/js/jquery.min.js"></Script>
             <Script src="assets/js/jquery-ui.js"></Script>
-            <Script src="assets/js/bootstrap.min.js"></Script>
+            {/* <Script src="assets/js/bootstrap.min.js"></Script> */}
+            <Script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossOrigin="anonymous"></Script>
+            <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossOrigin="anonymous"></Script>
             <Script src="assets/js/fontawesome.js"></Script>
             <Script src="assets/js/plugin/slick.js"></Script>
             <Script src="assets/js/plugin/jquery.nice-select.min.js"></Script>

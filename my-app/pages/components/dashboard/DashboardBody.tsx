@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 /* eslint-disable jsx-a11y/alt-text */
+import { Alert, AlertTitle } from "@mui/material";
 import { FC, useContext, useEffect, useState } from "react"
 import { Cookies, useCookies } from 'react-cookie'
 import { ConnectMetamask, GetBalance, SendBaseEndpoint } from "../../utils/Wallet";
@@ -8,7 +9,12 @@ import { AppContext } from "../context/AppContext";
 const cookieName = 'devaddress';
 
 function ErrorHandler(error: any) {
-    console.log(error)
+    return (
+        <Alert variant="outlined" severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {(error as Error).message}
+        </Alert>
+    )
 }
 function subaddress(address: string) {
     var sub = address.substring(0, 5);

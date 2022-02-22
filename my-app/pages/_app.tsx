@@ -1,5 +1,5 @@
 import '../styles/globals.css';
-import '../public/assets/css/bootstrap.min.css'
+// import '../public/assets/css/bootstrap.min.css'
 import '../public/assets/css/fontawesome.min.css'
 import '../public/assets/css/jquery-ui.css'
 import '../public/assets/css/plugin/nice-select.css'
