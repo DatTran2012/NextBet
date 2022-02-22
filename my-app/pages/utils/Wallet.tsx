@@ -1,6 +1,5 @@
 import { ethers } from 'ethers';
 import Web3 from 'web3';
-import { chainList } from './ChainId';
 
 export const ConnectMetamask = async () => {
     const isMetaMaskInstalled = () => {
