@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { ErrorHandler, getTxhash, subaddress } from "../../utils/Ultis";
 import { FC, useContext, useState } from "react"
-import { ConnectMetamask, GetBalance, SendBaseEndpoint } from "../../utils/Wallet";
+import WalletUlti from "../../utils/Wallet";
 import { AppContext } from "../context/AppContext";
 import { ShareSidebar } from "../shared/ShareSideBar";
 
@@ -18,7 +18,7 @@ const TransactionDeposit: FC = () => {
             return;
         }
 
-        SendBaseEndpoint(userAddress[0], process.env.NEXT_PUBLIC_SYSADDRESS, deposit as string);
+        WalletUlti().SendBaseEndpoint(userAddress[0], process.env.NEXT_PUBLIC_SYSADDRESS, deposit as string);
     }
 
     return (

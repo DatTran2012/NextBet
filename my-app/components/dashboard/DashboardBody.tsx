@@ -3,7 +3,7 @@
 import { ErrorHandler, getTxhash, subaddress } from "../../utils/Ultis";
 import { FC, useContext, useEffect, useState } from "react"
 import { useCookies } from 'react-cookie'
-import { ConnectMetamask, GetBalance } from "../../utils/Wallet";
+import WalletUlti from "../../utils/Wallet";
 import { AppContext } from "../context/AppContext";
 import { ShareSidebar } from "../shared/ShareSideBar";
 
@@ -179,7 +179,7 @@ const BodyOpenPlaying: FC = () => {
 }
 
 const BodyPlayTogether: FC = () => {
-    const { userBalance, userAddress, setUserAddress, setUserBalance, playTogether, setPlayTogether } = useContext(AppContext);
+    const { userBalance, userAddress, setUserAddress, setUserBalance, playTogether, setPlayTogether, web3 } = useContext(AppContext);
     const [txhash, setTxhash] = useState<string>();
     const [input, setInput] = useState<any>()
     const [disable, setDisable] = useState<boolean>(false);
@@ -227,10 +227,10 @@ const BodyPlayTogether: FC = () => {
 
     async function joinGame() {
         try {
-            const address = await ConnectMetamask()
+            const address = await WalletUlti().ConnectMetamask()
             setUserAddress(address);
             setCookie(cookieName, playTogether, { path: '/', expires: adddays(1) });
-            const walletBalance = await GetBalance(process.env.NEXT_PUBLIC_ENDPOINT, (address as Array<string>)[0]);
+            const walletBalance = await WalletUlti().GetBalance(web3, (address as Array<string>)[0]);
             setUserBalance(walletBalance);
         } catch (error) {
             ErrorHandler(error);

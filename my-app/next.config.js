@@ -4,7 +4,7 @@ const nextConfig = {
 };
 // const withHtml = require('next-html');
 const TerserPlugin = require('terser-webpack-plugin');
-const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
+// const { SubresourceIntegrityPlugin } = require('webpack-subresource-integrity');
 
 module.exports = {
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
@@ -14,7 +14,7 @@ module.exports = {
             exclude: /node_modules/,
         });
         config.output.crossOriginLoading = 'anonymous';
-        config.plugins.push(new SubresourceIntegrityPlugin());
+        // config.plugins.push(new SubresourceIntegrityPlugin());
         config.optimization = {
             minimize: true,
             minimizer: [new TerserPlugin()],
