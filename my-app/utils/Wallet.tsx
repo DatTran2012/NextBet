@@ -29,17 +29,6 @@ function WalletUlti() {
         }
     }
 
-    const DisconnectMetaMask = async () => {
-        await (window as any).ethereum.request({
-            method: "wallet_requestPermissions",
-            params: [
-                {
-                    eth_accounts: {}
-                }
-            ]
-        });
-    }
-
     const GetBalance = async (web3: Web3, address: string) => {
         try {
             const balance = await web3.eth.getBalance(address); //Will give value in.
@@ -72,33 +61,47 @@ function WalletUlti() {
     //send type of money base on endpoint currently connecting to then make post api txhash/address/amount
     const SendBaseEndpoint = async (from: string, to: string, amount: string) => {
         try {
+            // const web3 = new Web3(process.env.NEXT_PUBLIC_ENDPOINT);
+            // console.log(web3)
+            // // using the promise            
+            // web3.eth.sendTransaction({
+            //     from: from,
+            //     to: to,
+            //     value: '1000000000000000',
+            // })
+            //     .then(function (receipt) {
+            //         console.log(receipt);
+            //     });
+
             const params = [{
                 from: from,
                 to: to,
-                value: ethers.utils.parseUnits(amount, 9).toHexString(),
+                value: ethers.utils.parseUnits(amount, 18).toHexString(),
             }];
-            await ConnectMetamask()
             const { ethereum } = window as any;
             const provider = new ethers.providers.Web3Provider(ethereum);
 
-            // const balance = await provider.getBalance(from);
-            // const feeData = await provider.getFeeData();
-            // const amountBN = ethers.BigNumber.from(params[0].value);
+            const balance = await provider.getBalance(from);
+            const feeData = await provider.getFeeData();
 
-            // const finale = balance.add(feeData.gasPrice as ethers.BigNumber)
+            const finale = balance.add(feeData.gasPrice as ethers.BigNumber)
 
 
-            // if (finale.lt(balance)) {
-            //     throw new Error("Your balance is not enough");
-            // }
-
-            const transactionResult = await provider.send('eth_sendTransaction', params);
-            return transactionResult as string;
+            if (finale.lt(balance)) {
+                throw new Error("Your balance is not enough");
+            }
+            provider.send('eth_sendTransaction', params).then(data => {
+                // get detail txh from ether.js {{receive},addressplayer} => hiep => update balance via socket
+                console.log(data);
+                return data
+            })
+            // const transactionResult = await provider.send('eth_sendTransaction', params);
+            // return transactionResult as string;
         } catch (error) {
             console.log(error);
         }
     }
-    return { SendBaseEndpoint, GetBalance, ConnectMetamask, DisconnectMetaMask }
+    return { SendBaseEndpoint, GetBalance, ConnectMetamask }
 }
 
 export default WalletUlti;

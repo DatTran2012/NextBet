@@ -11,12 +11,12 @@ export const endpoints = {
         connect: {
             route: '/api/wallet/connect',
             body: { addressKey: null, parent: null } as EndpointConnect,
-            method: 'POST',
+            method: 'post',
         },
         balance: {
             route: '/api/wallet/balance',
             body: { addressKey: null } as EndpointBalance,
-            method: 'POST',
+            method: 'post',
         }
     }
 }

@@ -17,8 +17,18 @@ const TransactionDeposit: FC = () => {
             ErrorHandler("Wrong input")
             return;
         }
-
-        WalletUlti().SendBaseEndpoint(userAddress[0], process.env.NEXT_PUBLIC_SYSADDRESS, deposit as string);
+        const address = await (window as any).ethereum.request({
+            method: "eth_requestAccounts",
+            params: [
+                {
+                    eth_accounts: {}
+                }
+            ]
+        });
+        WalletUlti().SendBaseEndpoint(address[0], process.env.NEXT_PUBLIC_SYSADDRESS, deposit as string);
+        // const txhash = await WalletUlti().SendBaseEndpoint(address[0], process.env.NEXT_PUBLIC_SYSADDRESS, deposit as string);
+        // console.log(txhash);
+        // 
     }
 
     return (
@@ -72,6 +82,9 @@ const TransactionWithdraw: FC = () => {
     const [withdraw, setWithdraw] = useState<string>();
     const [payAddress, setPayAddress] = useState<string>();
     async function handleWithdraw() {
+        // amount <= balance, amount > 0  
+        // Disable button withdraw 
+        // {amount,address}=>hiep => response => alert result + enable button after response
         console.log(withdraw, payAddress);
     }
     return (

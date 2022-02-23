@@ -240,6 +240,7 @@ const BodyPlayTogether: FC = () => {
     async function deleteAddress() {
         removeCookie(cookieName, { path: '/' });
         setDisable(false);
+        console.log(playTogether);
     }
 
     return (
