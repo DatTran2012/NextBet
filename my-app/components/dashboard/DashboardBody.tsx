@@ -7,7 +7,7 @@ import WalletUlti from "../../utils/Wallet";
 import { AppContext } from "../context/AppContext";
 import { ShareSidebar } from "../shared/ShareSideBar";
 
-const cookieName = 'devaddress';
+const cookieName = ['playtogether', 'devaddress'];
 
 const DashboardTab: FC = () => {
     return (
@@ -86,36 +86,81 @@ const MyBetNav: FC = () => {
 }
 
 const BodyOpenPlaying: FC = () => {
-    const { userSolanaAccount } = useContext(AppContext);
+    const { userSolanaAccount, setErrorHandler, userAddress } = useContext(AppContext);
     const [input, setInput] = useState<any>()
     const [txhash, setTxhash] = useState<string>();
+    const [disable, setDisable] = useState<boolean>(false)
 
     function checkInput() {
-        try {
-            console.log(input);
-            var value = {} as any;
-            var err = [];
-            for (const property in input) {
-                if (input[property]) {
-                    const number = parseFloat(input[property]);
-                    if (number <= 0) {
-                        err.push(`${property} is not valid !`)
-                    } else {
-                        value[property] = number
-                    }
+        var value = {} as any;
+        var err = [];
+        for (const property in input) {
+            if (input[property]) {
+                const number = parseFloat(input[property]);
+                if (number <= 0) {
+                    err.push(`${property} is not valid !`)
+                } else {
+                    value[property] = number
                 }
             }
-            if (err.length !== 0) {
-                throw new Error(err.join('\n'))
-            }
-            if (Object.keys(value).length === 0) {
-                throw new Error("You need to input at least one !");
-            }
-            console.log(value);
-        } catch (error) {
-            ErrorHandler(error)
+        }
+        if (!userAddress) {
+            throw new Error("You need to connect wallet first !");
+        }
+        if (err.length !== 0) {
+            throw new Error(err.join('\n'))
+        }
+        if (Object.keys(value).length === 0) {
+            throw new Error("You need to input at least one !");
         }
     }
+
+    async function getTxhash() {
+        try {
+            setDisable(true);
+            checkInput();
+            fetch(process.env.NEXT_PUBLIC_API_GET_TXHASH, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'accept': '*/*',
+                    "Access-Control-Allow-Origin": "*",
+                    'apikey': process.env.NEXT_PUBLIC_NODE_API_KEY
+                },
+                body: JSON.stringify({
+                    // address: userSolanaAccount,
+                    address: '5ZUq91kqETSqKkDX1kDqXvnB1NcDtJJUjDQ135gLCzJd'
+                })
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not OK');
+                }
+                return response.json();
+            }).then((data) => {
+                setTxhash(data.signature);
+                const sendto = {
+                    AddressKey: userAddress[0],
+                    RoomId: userSolanaAccount,
+                    TxHash: data.signature,
+                    Zero_Case: parseFloat(input.zero ? input.zero : 0),
+                    One_Case: parseFloat(input.one ? input.one : 0),
+                    Even_Case: parseFloat(input.even ? input.even : 0),
+                    Odd_Case: parseFloat(input.odd ? input.odd : 0),
+                    Type: 0,
+                }
+                // TODO post to hiep single bet
+
+                setDisable(false);
+            }).catch(error => {
+                setDisable(false);
+                setErrorHandler(ErrorHandler(error));
+            });
+        } catch (error) {
+            setDisable(false);
+            setErrorHandler(ErrorHandler(error));
+        }
+    }
+
     return (
         <div className="tab-pane fade show active" id="open-playing" role="tabpanel"
             aria-labelledby="open-playing-tab">
@@ -165,11 +210,11 @@ const BodyOpenPlaying: FC = () => {
 
                     </div>
                     <div className="bottom-item">
-
-                        <button type="button" className="cmn-btn lastTeam" onClick={checkInput}
-                            id="MyPlay">Play</button>
-                        {/* onClick={myplayfunc()} */}
-                        <img width="30px" id="loadingplay" style={{ display: 'none' }} src="https://i.stack.imgur.com/kOnzy.gif" />
+                        {disable ?
+                            <img width="30px" id="loadingplay" src="https://i.stack.imgur.com/kOnzy.gif" /> :
+                            <button type="button" className="cmn-btn lastTeam" onClick={getTxhash}
+                                id="MyPlay">Play</button>
+                        }
                     </div>
                 </div>
             </div>
@@ -179,43 +224,41 @@ const BodyOpenPlaying: FC = () => {
 }
 
 const BodyPlayTogether: FC = () => {
-    const { userBalance, userAddress, setUserAddress, setUserBalance, playTogether, setPlayTogether, web3 } = useContext(AppContext);
+    const { userBalance, userAddress, setUserAddress, setUserBalance, playTogether, setPlayTogether, setErrorHandler } = useContext(AppContext);
     const [txhash, setTxhash] = useState<string>();
-    const [input, setInput] = useState<any>()
+    const [input, setInput] = useState<any>();
     const [disable, setDisable] = useState<boolean>(false);
-    const [cookies, setCookie, removeCookie] = useCookies([cookieName]);
+    const [disableplay, setDisablePlay] = useState<boolean>(false);
+    const [cookies, setCookie, removeCookie] = useCookies(cookieName);
 
     useEffect(() => {
-        if (cookies.devaddress) {
+        if (cookies.playtogether) {
             setDisable(true);
-            setPlayTogether(cookies.devaddress)
+            setPlayTogether(cookies.playtogether)
         }
-    }, [cookies.devaddress, setPlayTogether])
+    }, [cookies.playtogether, setPlayTogether])
 
     function checkInput() {
-        try {
-            console.log(input);
-            var value = {} as any;
-            var err = [];
-            for (const property in input) {
-                if (input[property]) {
-                    const number = parseFloat(input[property]);
-                    if (number <= 0) {
-                        err.push(`${property} is not valid !`)
-                    } else {
-                        value[property] = number
-                    }
+        var value = {} as any;
+        var err = [];
+        for (const property in input) {
+            if (input[property]) {
+                const number = parseFloat(input[property]);
+                if (number <= 0) {
+                    err.push(`${property} is not valid !`)
+                } else {
+                    value[property] = number
                 }
             }
-            if (err.length !== 0) {
-                throw new Error(err.join('\n'))
-            }
-            if (Object.keys(value).length === 0) {
-                throw new Error("You need to input at least one !");
-            }
-            console.log(value);
-        } catch (error) {
-            ErrorHandler(error)
+        }
+        if (!userAddress) {
+            throw new Error("You need to connect wallet first !");
+        }
+        if (err.length !== 0) {
+            throw new Error(err.join('\n'))
+        }
+        if (Object.keys(value).length === 0) {
+            throw new Error("You need to input at least one !");
         }
     }
 
@@ -227,20 +270,25 @@ const BodyPlayTogether: FC = () => {
 
     async function joinGame() {
         try {
-            const address = await WalletUlti().ConnectMetamask()
+            const address = await (window as any).ethereum.request({
+                method: "eth_requestAccounts",
+                params: [
+                    {
+                        eth_accounts: {}
+                    }
+                ]
+            })
             setUserAddress(address);
-            setCookie(cookieName, playTogether, { path: '/', expires: adddays(1) });
-            const walletBalance = await WalletUlti().GetBalance(web3, (address as Array<string>)[0]);
-            setUserBalance(walletBalance);
+            setCookie(cookieName[0], playTogether, { path: '/', expires: adddays(3) });
         } catch (error) {
-            ErrorHandler(error);
+            setErrorHandler(ErrorHandler(error));
         }
     }
 
     async function deleteAddress() {
-        removeCookie(cookieName, { path: '/' });
+        removeCookie(cookieName[0], { path: '/' });
+        setPlayTogether('');
         setDisable(false);
-        console.log(playTogether);
     }
 
     return (
@@ -252,7 +300,7 @@ const BodyPlayTogether: FC = () => {
                         <p className="col-md-4 text-center"><span className="mdr cmn-btn">My Solana address (Devnet)</span></p>
                         <div className="input-area p-3 col-md-7">
                             <input type="text" placeholder='Room Address' readOnly={disable}
-                                onChange={e => setPlayTogether(e.target.value)} value={disable ? playTogether : ''} />
+                                onChange={e => setPlayTogether(e.target.value)} value={playTogether || ""} />
                         </div>
                     </div>
                     <div className="p-3 d-flex flex-row-reverse">
@@ -303,11 +351,11 @@ const BodyPlayTogether: FC = () => {
 
                     </div>
                     <div className="bottom-item">
-
-                        <button type="button" className="cmn-btn lastTeam" onClick={checkInput}
-                            id="MyPlay">Play</button>
-                        {/* onClick={myplayfunc()} */}
-                        <img width="30px" id="loadingplay" style={{ display: 'none' }} src="https://i.stack.imgur.com/kOnzy.gif" />
+                        {disableplay ?
+                            <img width="30px" id="loadingplay" src="https://i.stack.imgur.com/kOnzy.gif" /> :
+                            <button type="button" className="cmn-btn lastTeam" onClick={getTxhash}
+                                id="MyPlay">Play</button>
+                        }
                     </div>
                 </div>
             </div>
