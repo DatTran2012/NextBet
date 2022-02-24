@@ -1,6 +1,7 @@
 /* eslint-disable react/no-children-prop */
 import react, { createContext, useEffect, useState } from 'react'
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+// import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder } from "../../node_modules/@microsoft/signalr/dist/esm/index";
 import { useCookies } from 'react-cookie'
 
 export const AppContext = createContext(null);
