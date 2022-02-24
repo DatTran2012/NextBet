@@ -20,7 +20,8 @@ export const ShareSidebar: FC = () => {
     // call api get balance/devaddress/status
     async function connect() {
         try {
-            WalletUlti().ConnectMetamask().then(address => {
+            // WalletUlti().ConnectMetamask().then(address => {
+            WalletUlti().AutoConnect().then(address => {
                 // hiep => {balance,devnet}
                 fetch(process.env.NEXT_PUBLIC_API_CONNECT, {
                     method: "POST",

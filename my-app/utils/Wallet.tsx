@@ -60,9 +60,9 @@ function WalletUlti() {
                     params: [{ chainId: process.env.NEXT_PUBLIC_CHAINID }]
                 })
             }
-            if ((window as any).ethereum.chainId !== '0x61') {
-                throw new Error('We only support bsc chain !')
-            }
+            // if ((window as any).ethereum.chainId !== '0x61') {
+            //     throw new Error('We only support bsc chain !')
+            // }
             return await connectMetamask();
         } catch (error) {
             console.error(error);
