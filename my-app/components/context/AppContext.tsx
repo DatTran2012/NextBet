@@ -13,7 +13,15 @@ export default function AppProvider(props: { children: boolean | react.ReactChil
     const [userSolanaAccount, setUserSolanaAccount] = useState<any>()
     const [playTogether, setPlayTogether] = useState<any>()
     const [errorhandler, setErrorHandler] = useState<any>();
-    const [connection, setConnection] = useState<null | HubConnection>(null);
+    const [connection, setConnection] = useState<null | HubConnection>(
+        new HubConnectionBuilder()
+            .withUrl(process.env.NEXT_PUBLIC_API_SIGNALR, {
+                skipNegotiation: true,
+                transport: 1
+            })
+            .withAutomaticReconnect()
+            .build()
+    );
 
     const cookieName = 'wallet';
     const [cookies, setCookie, removeCookie] = useCookies([cookieName]);
@@ -29,26 +37,6 @@ export default function AppProvider(props: { children: boolean | react.ReactChil
             }
         })
     })
-
-    useEffect(() => {
-        const connect = new HubConnectionBuilder()
-            .withUrl("https://pickluck.amazingtech.vn/hub/signalr", {
-                skipNegotiation: true,
-                transport: 1
-            })
-            .withAutomaticReconnect()
-            .build();
-        connect.onreconnected(() => {
-            console.log('reconnected')
-        })
-        connect.on("JoinGroup", (data) => {
-            console.log('join:  ', data)
-        });
-        connect.on("Balance", (data) => {
-            console.log('Balance:  ', data)
-        });
-        setConnection(connect);
-    }, []);
 
     useEffect(() => {
         if (cookies.wallet) {
@@ -70,19 +58,27 @@ export default function AppProvider(props: { children: boolean | react.ReactChil
     }, [])
 
     useEffect(() => {
-        if (connection) {
-
+        connection.onreconnected(() => {
+            console.log('reconnected')
+        })
+        connection.on("JoinGroup", (data) => {
+            console.log('join:  ', data)
+        });
+        connection.on("Balance", (data) => {
+            setUserBalance(data);
+            setCookie(cookieName, { address: userAddress, balance: data }, {
+                maxAge: 3600 * 24 * 3,
+                path: '/',
+            });
+        });
+        if (connection.state === 'Disconnected') {
             connection
                 .start()
-                .then(() => {
-                    connection.invoke('JoinGroup', 'testAddressAbcd');
-                    // connection.invoke('Balance', 'test');
-                })
                 .catch((error) => {
                     console.log(error);
                 });
         }
-    }, [connection]);
+    }, [connection, setCookie, userAddress]);
 
     return (
         <AppContext.Provider value={{
