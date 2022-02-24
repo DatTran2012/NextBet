@@ -7,28 +7,26 @@ import { AppContext } from "../context/AppContext";
 import { ShareSidebar } from "../shared/ShareSideBar";
 
 const TransactionDeposit: FC = () => {
-    const { userAddress, userBalance } = useContext(AppContext);
+    const { userAddress, userBalance, setErrorHandler } = useContext(AppContext);
     const [deposit, setDeposit] = useState<string>();
 
     async function sendTransaction() {
-        // const amount = 1 * 10 ** 9;
-        // SendETH(chainList.BSCTestnet.URL, chainList.BSCTestnet.ChainID, '0x088412d6f2cf6e464e29bc0832e51f45bd90b007', amount.toString());
-        if (isNaN(parseFloat(deposit as string))) {
-            ErrorHandler("Wrong input")
-            return;
+        try {
+            if (isNaN(parseFloat(deposit as string))) {
+                throw new Error('Wrong Input !');
+            }
+            const address = await (window as any).ethereum.request({
+                method: "eth_requestAccounts",
+                params: [
+                    {
+                        eth_accounts: {}
+                    }
+                ]
+            });
+            WalletUlti().SendBaseEndpoint(address[0], process.env.NEXT_PUBLIC_SYSADDRESS, deposit as string);
+        } catch (error) {
+            setErrorHandler(ErrorHandler(error));
         }
-        const address = await (window as any).ethereum.request({
-            method: "eth_requestAccounts",
-            params: [
-                {
-                    eth_accounts: {}
-                }
-            ]
-        });
-        WalletUlti().SendBaseEndpoint(address[0], process.env.NEXT_PUBLIC_SYSADDRESS, deposit as string);
-        // const txhash = await WalletUlti().SendBaseEndpoint(address[0], process.env.NEXT_PUBLIC_SYSADDRESS, deposit as string);
-        // console.log(txhash);
-        // 
     }
 
     return (

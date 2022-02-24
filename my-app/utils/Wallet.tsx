@@ -24,15 +24,13 @@ function WalletUlti() {
             if (!isMetaMaskInstalled()) {
                 throw new Error("No MetaMask found");
             }
-            if ((window as any).ethereum.chainId !== '0x61') {
+            if ((window as any).ethereum.chainId !== process.env.NEXT_PUBLIC_CHAINID) {
                 await (window as any).ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: process.env.NEXT_PUBLIC_CHAINID }]
-                });
-                return await autoConnect();
-            } else {
-                return await autoConnect();
+                })
             }
+            return await autoConnect();
         } catch (error) {
             console.error(error);
         }
@@ -56,15 +54,16 @@ function WalletUlti() {
             if (!isMetaMaskInstalled()) {
                 throw new Error("No MetaMask found");
             }
-            if ((window as any).ethereum.chainId !== '0x61') {
+            if ((window as any).ethereum.chainId !== process.env.NEXT_PUBLIC_CHAINID) {
                 await (window as any).ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: process.env.NEXT_PUBLIC_CHAINID }]
-                });
-                return await connectMetamask();
-            } else {
-                return await connectMetamask();
+                })
             }
+            if ((window as any).ethereum.chainId !== '0x61') {
+                throw new Error('We only support bsc chain !')
+            }
+            return await connectMetamask();
         } catch (error) {
             console.error(error);
         }
