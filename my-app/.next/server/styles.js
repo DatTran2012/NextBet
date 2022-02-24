@@ -1,2 +1,0 @@
-/*! For license information please see styles.js.LICENSE.txt */
-exports.id="styles",exports.ids=["styles"],exports.modules={"./components/dashboard/dashboard.css":()=>{},"./public/assets/css/arafat-font.css":()=>{},"./public/assets/css/fontawesome.min.css":()=>{},"./public/assets/css/jquery-ui.css":()=>{},"./public/assets/css/plugin/animate.css":()=>{},"./public/assets/css/plugin/magnific-popup.css":()=>{},"./public/assets/css/plugin/nice-select.css":()=>{},"./public/assets/css/plugin/slick.css":()=>{},"./public/assets/css/style.css":()=>{},"./styles/globals.css":()=>{}};
