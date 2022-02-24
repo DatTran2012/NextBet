@@ -20,45 +20,46 @@ export const ShareSidebar: FC = () => {
     // call api get balance/devaddress/status
     async function connect() {
         try {
-            const address = await WalletUlti().ConnectMetamask();
-            // hiep => {balance,devnet}
-            fetch(process.env.NEXT_PUBLIC_API_CONNECT, {
-                method: "POST",
-                headers: {
-                    'Content-type': 'application/json-patch+json',
-                    'accept': '*/*',
-                    "Access-Control-Allow-Origin": "*"
-                },
-                body: JSON.stringify({
-                    addressKey: (address as Array<string>)[0],
-                    parent: 'master',
+            WalletUlti().ConnectMetamask().then(address => {
+                // hiep => {balance,devnet}
+                fetch(process.env.NEXT_PUBLIC_API_CONNECT, {
+                    method: "POST",
+                    headers: {
+                        'Content-type': 'application/json-patch+json',
+                        'accept': '*/*',
+                        "Access-Control-Allow-Origin": "*"
+                    },
+                    body: JSON.stringify({
+                        addressKey: (address as Array<string>)[0],
+                        parent: 'master',
+                    })
                 })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not OK');
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    // join group socket
-                    connection.invoke('JoinGroup', address[0]).then(() => {
-                        // get balance socket
-                        const message = { addressKey: address[0], Balance: parseFloat(userBalance) }
-                        connection.invoke('Balance', message).then(() => {
-                            setUserAddress(address);
-                            setCookie(cookieName[1], data.data.solAddress, { path: '/', maxAge: 3600 * 24 * 3 })
-                            setUserSolanaAccount(data.data.solAddress)
-                        }).catch((error: any) => {
-                            setErrorHandler(ErrorHandler(error));
-                        });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not OK');
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        // join group socket
+                        connection.invoke('JoinGroup', address[0]).then(() => {
+                            // get balance socket
+                            const message = { addressKey: address[0], Balance: parseFloat(userBalance) }
+                            connection.invoke('Balance', message).then(() => {
+                                setUserAddress(address);
+                                setCookie(cookieName[1], data.data.solAddress, { path: '/', maxAge: 3600 * 24 * 3 })
+                                setUserSolanaAccount(data.data.solAddress)
+                            }).catch((error: any) => {
+                                setErrorHandler(ErrorHandler(error));
+                            });
 
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        setErrorHandler(ErrorHandler(error));
                     });
-                })
-                .catch(error => {
-                    console.log(error);
-                    setErrorHandler(ErrorHandler(error));
-                });
+            });
         } catch (error) {
             console.log(error);
             setErrorHandler(ErrorHandler(error));
