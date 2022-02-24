@@ -11,10 +11,11 @@ export const ShareSidebar: FC = () => {
     const { userBalance, userAddress,
         setUserAddress, setUserBalance,
         setUserSolanaAccount, errorhandler,
-        setErrorHandler, connection } = useContext(AppContext);
+        setErrorHandler, connection,
+        setPlayTogether } = useContext(AppContext);
 
-    const cookieName = 'wallet';
-    const [cookies, setCookie, removeCookie] = useCookies([cookieName]);
+    const cookieName = ['wallet', 'devaddress', 'playtogether'];
+    const [cookies, setCookie, removeCookie] = useCookies(cookieName);
 
     // call api get balance/devaddress/status
     async function connect() {
@@ -30,34 +31,28 @@ export const ShareSidebar: FC = () => {
                 },
                 body: JSON.stringify({
                     addressKey: (address as Array<string>)[0],
-                    'parent': 'master',
+                    parent: 'master',
                 })
             })
                 .then(response => {
-                    console.log(response)
                     if (!response.ok) {
                         throw new Error('Network response was not OK');
                     }
                     return response.json();
                 })
                 .then((data) => {
-                    // call balance from socket
-                    connection.invoke("Balance",).then(async (balance: any) => {
-                        // { cookie, balance } devnet
-                        setCookie(cookieName, { address: address, balance: balance }, {
-                            maxAge: 3600 * 24 * 3,
-                            path: '/',
+                    // join group socket
+                    connection.invoke('JoinGroup', address[0]).then(() => {
+                        // get balance socket
+                        const message = { addressKey: address[0], Balance: parseFloat(userBalance) }
+                        connection.invoke('Balance', message).then(() => {
+                            setUserAddress(address);
+                            setCookie(cookieName[1], data.data.solAddress, { path: '/', maxAge: 3600 * 24 * 3 })
+                            setUserSolanaAccount(data.data.solAddress)
+                        }).catch((error: any) => {
+                            setErrorHandler(ErrorHandler(error));
                         });
-                        connection.invoke('JoinGroup', address[0]).then(() => {
-                            console.log('joingroup');
-                            const message = { addressKey: address[0], Balance: parseFloat(userBalance) }
-                            connection.invoke('Balance', message);
-                        });
-                        setUserAddress(address);
-                        setUserSolanaAccount(data.data.solAddress)
-                    }).catch((error: any) => {
-                        console.log(error);
-                        setErrorHandler(ErrorHandler(error));
+
                     });
                 })
                 .catch(error => {
@@ -72,8 +67,13 @@ export const ShareSidebar: FC = () => {
 
     async function disconnect() {
         connection.invoke('LeaveGroup', userAddress[0])
-        removeCookie(cookieName, { path: '/' });
-        setUserAddress(null);
+        removeCookie(cookieName[0], { path: '/' });
+        removeCookie(cookieName[1], { path: '/' });
+        removeCookie(cookieName[3], { path: '/' });
+        setUserAddress('');
+        setUserBalance('0');
+        setUserSolanaAccount('');
+        setPlayTogether('');
     }
 
     return (
@@ -88,7 +88,7 @@ export const ShareSidebar: FC = () => {
             <div className="balance">
                 <div className="single-item">
                     <img src="assets/images/icon/dashboard-sidebar-icon-1.png" alt="images" />
-                    <h5>{userAddress ? userBalance : 0}</h5>
+                    <h5>{userBalance}</h5>
                     {userAddress ? <p>Available Balance</p> :
                         <button onClick={() => connect()} className="cmn-btn">Connect Wallet</button>}
                     {userAddress && <button onClick={() => disconnect()} className="cmn-btn mt-3">Disconnect</button>}

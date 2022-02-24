@@ -2,7 +2,6 @@
 import react, { createContext, useEffect, useState } from 'react'
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { useCookies } from 'react-cookie'
-import Web3 from 'web3';
 
 export const AppContext = createContext(null);
 
@@ -23,8 +22,8 @@ export default function AppProvider(props: { children: boolean | react.ReactChil
             .build()
     );
 
-    const cookieName = 'wallet';
-    const [cookies, setCookie, removeCookie] = useCookies([cookieName]);
+    const cookieName = ['wallet', 'devaddress', 'playtogether'];
+    const [cookies, setCookie, removeCookie] = useCookies(cookieName);
 
     useEffect(() => {
         (window as any).ethereum.on('accountsChanged', function (accounts: any) {
@@ -48,7 +47,18 @@ export default function AppProvider(props: { children: boolean | react.ReactChil
                     }
                 ]
             }).then((data: any) => {
-                setCookie(cookieName, data, {
+                if (cookies.wallet) {
+                    setUserBalance(cookies.wallet.balance.balance.toString());
+                }
+                if (cookies.devaddress) {
+                    setUserSolanaAccount(cookies.devaddress);
+                }
+                if (cookies.playtogether) {
+                    setPlayTogether(cookies.playtogether);
+                }
+                let newCookie = cookies.wallet;
+                newCookie.address = data;
+                setCookie(cookieName[0], newCookie, {
                     maxAge: 3600 * 24 * 3,
                     path: '/',
                 })
@@ -65,8 +75,8 @@ export default function AppProvider(props: { children: boolean | react.ReactChil
             console.log('join:  ', data)
         });
         connection.on("Balance", (data) => {
-            setUserBalance(data);
-            setCookie(cookieName, { address: userAddress, balance: data }, {
+            setUserBalance(data.balance.toString());
+            setCookie(cookieName[0], { address: userAddress, balance: data }, {
                 maxAge: 3600 * 24 * 3,
                 path: '/',
             });

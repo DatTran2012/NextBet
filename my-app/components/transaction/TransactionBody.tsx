@@ -78,14 +78,27 @@ const TransactionDeposit: FC = () => {
 }
 
 const TransactionWithdraw: FC = () => {
-    const { userBalance } = useContext(AppContext);
+    const { userBalance, setErrorHandler } = useContext(AppContext);
     const [withdraw, setWithdraw] = useState<string>();
+    const [disable, setDisable] = useState<boolean>(false);
     const [payAddress, setPayAddress] = useState<string>();
     async function handleWithdraw() {
-        // amount <= balance, amount > 0  
-        // Disable button withdraw 
-        // {amount,address}=>hiep => response => alert result + enable button after response
-        console.log(withdraw, payAddress);
+        try {
+            // Disable button withdraw 
+            setDisable(true);
+            // amount <= balance, amount > 0  
+            if (parseFloat(withdraw) <= 0) {
+                throw new Error('Invalid input amount !');
+            }
+            if (parseFloat(withdraw) >= parseFloat(userBalance)) {
+                throw new Error('Your balance is not enouth !');
+            }
+            // {amount,address}=>hiep => response => alert result + enable button after response
+            setDisable(false)
+            console.log(withdraw, payAddress);
+        } catch (error) {
+            setErrorHandler(ErrorHandler(error));
+        }
     }
     return (
         <div className="tab-pane fade" id="withdraw" role="tabpanel" aria-labelledby="withdraw-tab">
@@ -123,9 +136,9 @@ const TransactionWithdraw: FC = () => {
                                             <input type="text" placeholder="Enter Payment Address" onChange={e => setPayAddress(e.target.value)} />
                                         </div>
                                     </div>
-                                    <span className="btn-border">
-                                        <a className="cmn-btn" onClick={handleWithdraw}>Get Start Now</a>
-                                    </span>
+                                    <button className="btn-border" disabled={disable} onClick={handleWithdraw}>
+                                        <span className="cmn-btn">Withdraw</span>
+                                    </button>
                                 </form>
                             </div>
                             <div className="bottom-area">
