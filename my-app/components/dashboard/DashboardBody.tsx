@@ -212,7 +212,7 @@ const BodyOpenPlaying: FC = () => {
                     <div className="bottom-item">
                         {disable ?
                             <img width="30px" id="loadingplay" src="https://i.stack.imgur.com/kOnzy.gif" /> :
-                            <button type="button" className="cmn-btn lastTeam" onClick={getTxhash}
+                            <button type="button" className="cmn-btn lastTeam" onClick={() => getTxhash()}
                                 id="MyPlay">Play</button>
                         }
                     </div>
@@ -351,9 +351,10 @@ const BodyPlayTogether: FC = () => {
 
                     </div>
                     <div className="bottom-item">
+                        {/* onClick={() => getTxhash()} */}
                         {disableplay ?
                             <img width="30px" id="loadingplay" src="https://i.stack.imgur.com/kOnzy.gif" /> :
-                            <button type="button" className="cmn-btn lastTeam" onClick={getTxhash}
+                            <button type="button" className="cmn-btn lastTeam"
                                 id="MyPlay">Play</button>
                         }
                     </div>
