@@ -9,9 +9,12 @@ export function ErrorHandler(error: any) {
     )
 }
 export function subaddress(address: string) {
-    var sub = address.substring(0, 5);
-    var sub2 = address.substring(address.length - 5, address.length);
-    return sub + '....' + sub2;
+    if (address) {
+        var sub = address.substring(0, 5);
+        var sub2 = address.substring(address.length - 5, address.length);
+        return sub + '....' + sub2;
+    }
+    return '';
 }
 export async function getTxhash(address: string) {
     // Implement

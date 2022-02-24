@@ -89,13 +89,13 @@ const TransactionWithdraw: FC = () => {
                 throw new Error('Invalid input amount !');
             }
             if (parseFloat(withdraw) >= parseFloat(userBalance)) {
-                throw new Error('Your balance is not enouth !');
+                throw new Error('Your balance is not enough !');
             }
 
             // {amount,address}=>hiep => response => alert result + enable button after response
             setDisable(false)
-            console.log(withdraw, payAddress);
         } catch (error) {
+            setDisable(false)
             setErrorHandler(ErrorHandler(error));
         }
     }
@@ -107,12 +107,6 @@ const TransactionWithdraw: FC = () => {
                         <div className="balance-area">
                             <div
                                 className="head-area d-flex align-items-center justify-content-between">
-                                {/* <p className="mdr">Current Balance</p>
-                                                            <select>
-                                                                <option value="1">BTC</option>
-                                                                <option value="2">ETH</option>
-                                                                <option value="3">LTC</option>
-                                                            </select> */}
                                 <p className="mdr">Your Balance</p>
                             </div>
                             <h6>{userBalance} <span>BNB</span></h6>
@@ -127,12 +121,6 @@ const TransactionWithdraw: FC = () => {
                                         <label>Amount</label>
                                         <div className="input-area">
                                             <input type="number" placeholder="Enter Amount" onChange={e => setWithdraw(e.target.value)} />
-                                        </div>
-                                    </div>
-                                    <div className="input-single">
-                                        <label>Payment Address</label>
-                                        <div className="input-area">
-                                            <input type="text" placeholder="Enter Payment Address" onChange={e => setPayAddress(e.target.value)} />
                                         </div>
                                     </div>
                                     <button className="btn-border" disabled={disable} onClick={handleWithdraw}>

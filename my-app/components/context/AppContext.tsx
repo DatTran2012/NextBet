@@ -69,25 +69,29 @@ export default function AppProvider(props: { children: boolean | react.ReactChil
     }, [])
 
     useEffect(() => {
-        connection.onreconnected(() => {
-            console.log('reconnected')
-        })
-        connection.on("JoinGroup", (data) => {
-            console.log('join:  ', data)
-        });
-        connection.on("Balance", (data) => {
-            setUserBalance(data.balance.toString());
-            setCookie(cookieName[0], { address: userAddress, balance: data }, {
-                maxAge: 3600 * 24 * 3,
-                path: '/',
+        try {
+            connection.onreconnected(() => {
+                console.log('reconnected')
+            })
+            connection.on("JoinGroup", (data) => {
+                console.log('join:  ', data)
             });
-        });
-        if (connection.state === 'Disconnected') {
-            connection
-                .start()
-                .catch((error) => {
-                    console.log(error);
+            connection.on("Balance", (data) => {
+                setUserBalance(data.balance.toString());
+                setCookie(cookieName[0], { address: userAddress, balance: data }, {
+                    maxAge: 3600 * 24 * 3,
+                    path: '/',
                 });
+            });
+            if (connection.state === 'Disconnected') {
+                connection
+                    .start()
+                    .catch((error) => {
+                        // TODO
+                    });
+            }
+        } catch (error) {
+            // TODO
         }
     }, [connection, setCookie, userAddress]);
 

@@ -56,25 +56,27 @@ export const ShareSidebar: FC = () => {
                         });
                     })
                     .catch(error => {
-                        console.log(error);
                         setErrorHandler(ErrorHandler(error));
                     });
             });
         } catch (error) {
-            console.log(error);
             setErrorHandler(ErrorHandler(error));
         }
     }
 
     async function disconnect() {
-        connection.invoke('LeaveGroup', userAddress[0])
-        removeCookie(cookieName[0], { path: '/' });
-        removeCookie(cookieName[1], { path: '/' });
-        removeCookie(cookieName[3], { path: '/' });
-        setUserAddress('');
-        setUserBalance('0');
-        setUserSolanaAccount('');
-        setPlayTogether('');
+        try {
+            connection.invoke('LeaveGroup', userAddress[0])
+            removeCookie(cookieName[0], { path: '/' });
+            removeCookie(cookieName[1], { path: '/' });
+            removeCookie(cookieName[3], { path: '/' });
+            setUserAddress('');
+            setUserBalance('0');
+            setUserSolanaAccount('');
+            setPlayTogether('');
+        } catch (error) {
+            setErrorHandler(ErrorHandler(error));
+        }
     }
 
     return (

@@ -32,7 +32,7 @@ function Layout(props: any) {
             <Script src="assets/js/plugin/jquery.nice-select.min.js" />
             <Script src="assets/js/plugin/jquery.downCount.js" />
             <Script src="assets/js/plugin/counter.js" />
-            <Script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" />
+            <Script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js" />
             <Script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js" />
             <Script src="assets/js/plugin/wow.min.js" />
             <Script src="assets/js/plugin/plugin.js" />

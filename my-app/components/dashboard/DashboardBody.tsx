@@ -264,7 +264,7 @@ const BodyPlayTogether: FC = () => {
         }
     }
 
-    async function getTxhash() {
+    async function playHandler() {
         try {
             setDisablePlay(true);
             checkInput();
@@ -280,11 +280,9 @@ const BodyPlayTogether: FC = () => {
             }
             // TODO post to hiep multi player bet
 
-            setTimeout(() => {
-                setDisablePlay(false);
-            }, 5000);
+            setDisablePlay(false);
         } catch (error) {
-            setDisable(false);
+            setDisablePlay(false);
             setErrorHandler(ErrorHandler(error));
         }
     }
@@ -297,7 +295,7 @@ const BodyPlayTogether: FC = () => {
 
     async function joinGame() {
         try {
-            const address = WalletUlti().AutoConnect();
+            const address = await WalletUlti().AutoConnect();
             setUserAddress(address);
             setCookie(cookieName[0], playTogether, { path: '/', expires: adddays(3) });
         } catch (error) {
@@ -371,11 +369,10 @@ const BodyPlayTogether: FC = () => {
 
                     </div>
                     <div className="bottom-item">
-                        {/* onClick={() => getTxhash()} */}
                         {disableplay ?
                             <img width="30px" id="loadingplay" src="https://i.stack.imgur.com/kOnzy.gif" /> :
                             <button type="button" className="cmn-btn lastTeam"
-                                id="MyPlay">Play</button>
+                                onClick={async () => await playHandler()} id="MyPlay">Play</button>
                         }
                     </div>
                 </div>
