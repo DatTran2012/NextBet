@@ -2,28 +2,69 @@ import { ethers } from 'ethers';
 import Web3 from 'web3';
 
 function WalletUlti() {
-    const ConnectMetamask = async () => {
-        const isMetaMaskInstalled = () => {
-            //Have to check the ethereum binding on the window object to see if it's installed
-            const { ethereum } = window as any;
-            return Boolean(ethereum && ethereum.isMetaMask);
-        };
+    const isMetaMaskInstalled = () => {
+        //Have to check the ethereum binding on the window object to see if it's installed
+        const { ethereum } = window as any;
+        return Boolean(ethereum && ethereum.isMetaMask);
+    };
+    async function autoConnect() {
+        const address = await (window as any).ethereum.request({
+            method: "eth_requestAccounts",
+            params: [
+                {
+                    eth_accounts: {}
+                }
+            ]
+        })
+        return address;
+    }
 
+    const AutoConnect = async () => {
         try {
             if (!isMetaMaskInstalled()) {
                 throw new Error("No MetaMask found");
             }
-            // Will open the MetaMask UI
-            // You should disable this button while the request is pending!
-            const account = await (window as any).ethereum.request({
-                method: "wallet_requestPermissions",
-                params: [
-                    {
-                        eth_accounts: {}
-                    }
-                ]
-            });
-            return account[0].caveats[0].value;
+            if ((window as any).ethereum.chainId !== '0x61') {
+                await (window as any).ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: process.env.NEXT_PUBLIC_CHAINID }]
+                });
+                return await autoConnect();
+            } else {
+                return await autoConnect();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function connectMetamask() {
+        // Will open the MetaMask UI
+        // You should disable this button while the request is pending!
+        const account = await (window as any).ethereum.request({
+            method: "wallet_requestPermissions",
+            params: [
+                {
+                    eth_accounts: {}
+                }
+            ]
+        });
+        return account[0].caveats[0].value;
+    }
+    const ConnectMetamask = async () => {
+        try {
+            if (!isMetaMaskInstalled()) {
+                throw new Error("No MetaMask found");
+            }
+            if ((window as any).ethereum.chainId !== '0x61') {
+                await (window as any).ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: process.env.NEXT_PUBLIC_CHAINID }]
+                });
+                return await connectMetamask();
+            } else {
+                return await connectMetamask();
+            }
         } catch (error) {
             console.error(error);
         }
@@ -73,6 +114,7 @@ function WalletUlti() {
             //         console.log(receipt);
             //     });
 
+            AutoConnect();
             const params = [{
                 from: from,
                 to: to,
@@ -91,9 +133,11 @@ function WalletUlti() {
                 throw new Error("Your balance is not enough");
             }
             provider.send('eth_sendTransaction', params).then(data => {
-                // get detail txh from ether.js {{receive},addressplayer} => hiep => update balance via socket
-                console.log(data);
-                return data
+                // get detail txh from ether.js
+                const provider = ethers.getDefaultProvider(process.env.NEXT_PUBLIC_ENDPOINT);
+                provider.waitForTransaction(data).then(receipt => {
+                    // send receive to api
+                })
             })
             // const transactionResult = await provider.send('eth_sendTransaction', params);
             // return transactionResult as string;
@@ -101,7 +145,7 @@ function WalletUlti() {
             console.log(error);
         }
     }
-    return { SendBaseEndpoint, GetBalance, ConnectMetamask }
+    return { SendBaseEndpoint, GetBalance, ConnectMetamask, AutoConnect }
 }
 
 export default WalletUlti;

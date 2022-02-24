@@ -128,8 +128,7 @@ const BodyOpenPlaying: FC = () => {
                     'apikey': process.env.NEXT_PUBLIC_NODE_API_KEY
                 },
                 body: JSON.stringify({
-                    // address: userSolanaAccount,
-                    address: '5ZUq91kqETSqKkDX1kDqXvnB1NcDtJJUjDQ135gLCzJd'
+                    address: userSolanaAccount,
                 })
             }).then(response => {
                 if (!response.ok) {
@@ -254,11 +253,39 @@ const BodyPlayTogether: FC = () => {
         if (!userAddress) {
             throw new Error("You need to connect wallet first !");
         }
+        if (!playTogether) {
+            throw new Error("You need to join room !");
+        }
         if (err.length !== 0) {
             throw new Error(err.join('\n'))
         }
         if (Object.keys(value).length === 0) {
             throw new Error("You need to input at least one !");
+        }
+    }
+
+    async function getTxhash() {
+        try {
+            setDisablePlay(true);
+            checkInput();
+            const sendto = {
+                AddressKey: userAddress[0],
+                RoomId: playTogether,
+                TxHash: '',
+                Zero_Case: parseFloat(input.zero ? input.zero : 0),
+                One_Case: parseFloat(input.one ? input.one : 0),
+                Even_Case: parseFloat(input.even ? input.even : 0),
+                Odd_Case: parseFloat(input.odd ? input.odd : 0),
+                Type: 1,
+            }
+            // TODO post to hiep multi player bet
+
+            setTimeout(() => {
+                setDisablePlay(false);
+            }, 5000);
+        } catch (error) {
+            setDisable(false);
+            setErrorHandler(ErrorHandler(error));
         }
     }
 
@@ -270,14 +297,7 @@ const BodyPlayTogether: FC = () => {
 
     async function joinGame() {
         try {
-            const address = await (window as any).ethereum.request({
-                method: "eth_requestAccounts",
-                params: [
-                    {
-                        eth_accounts: {}
-                    }
-                ]
-            })
+            const address = WalletUlti().AutoConnect();
             setUserAddress(address);
             setCookie(cookieName[0], playTogether, { path: '/', expires: adddays(3) });
         } catch (error) {
